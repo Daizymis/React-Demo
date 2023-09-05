@@ -14,9 +14,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-          <Routes>
-          {isMobile ? <Route path="/" element={<MobileRoutes />}/> : <Route path="/" element={<PCRoutes/>}/>}
-          </Routes>
+          {isMobile ? <MobileRoutes /> : <PCRoutes />}
       </Router>
     </div>
   );
