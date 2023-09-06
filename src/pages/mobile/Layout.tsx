@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import {NavBar, Popup, SideBar} from "antd-mobile";
 import {AppstoreOutline} from "antd-mobile-icons";
 import '../../assets/css/mobile/normal.scss'
-import {Routes, useLocation, useNavigate, useParams, useRoutes} from 'react-router';
-import {BrowserRouter as Router, Link, Route} from "react-router-dom";
-import Selector from "./example/filter/demo";
+import {Routes, useLocation, useNavigate} from 'react-router';
+import {Link, Route} from "react-router-dom";
+
+const Selector = React.lazy(() => import('./example/filter/demo'));
+const LazyLoadImage = React.lazy(() => import('./example/lazy-load-image/demo'));
 
 const Layout = () => {
     const navigate = useNavigate();
@@ -16,7 +18,6 @@ const Layout = () => {
             {key: '1', title: '选择器', url: 'example/selector'},
             {key: '2', title: '图片懒加载', url: 'example/lazyLoadImage'}
         ]
-    console.log(location);
     useEffect(() => {
         setVisible(false)
         let tab = tabs.find(item => ~location.pathname.indexOf(item.url));
@@ -31,7 +32,13 @@ const Layout = () => {
     }
     return (
         <React.Fragment>
-            <NavBar backArrow={<AppstoreOutline/>} onBack={showMenu} style={{backgroundColor:'#ffc0cb'}}>
+            <NavBar
+                backArrow={<AppstoreOutline/>}
+                onBack={showMenu}
+                style={{
+                    backgroundColor: '#ffc0cb', position: 'fixed',
+                    width: '100%',top: 0
+                }}>
                 <svg className="icon" viewBox="0 0 1024 1024" version="1.1"
                      xmlns="http://www.w3.org/2000/svg" p-id="1729" width="30" height="30">
                     <path
@@ -58,15 +65,25 @@ const Layout = () => {
                         <SideBar.Item
                             key={item.key}
                             title={<Link to={item.url}>{item.title}</Link>}
-                            style={{color:'#d2637de0'}}
+                            style={{color: '#d2637de0'}}
                         />
                     ))}
                 </SideBar>
             </Popup>
             <div className="content">
-                <Routes >
-                    <Route path="/example/selector" element={<Selector/>}/>
-                    <Route path="/example/lazyLoadImage" element={<Selector/>}/>
+                <Routes>
+                    <Route
+                        path="/example/selector"
+                        element={<Suspense fallback={<div>Loading...</div>}>
+                            <Selector/>
+                        </Suspense>}
+                    />
+                    <Route
+                        path="/example/lazyLoadImage"
+                        element={<Suspense fallback={<div>Loading...</div>}>
+                            <LazyLoadImage/>
+                        </Suspense>}
+                    />
                 </Routes>
             </div>
         </React.Fragment>
