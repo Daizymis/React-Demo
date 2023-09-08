@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {Suspense, useState} from 'react';
 import {LaptopOutlined, NotificationOutlined} from '@ant-design/icons';
-import type {MenuProps} from 'antd';
+import type { MenuProps } from 'antd/es/menu'
 import {Breadcrumb, Button, ConfigProvider, Layout, Menu, theme} from 'antd';
 import {
     MenuFoldOutlined,
@@ -10,8 +10,12 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import type {ThemeConfig} from 'antd';
+import {GlobalOutline} from "antd-mobile-icons";
+import {Routes, useNavigate} from "react-router";
+import {Route} from "react-router-dom";
+import {ItemType, MenuItemType} from "antd/es/menu/hooks/useItems";
 
-
+const Promise1 = React.lazy(() => import('./example/promise/demo1'))
 const {Header, Content, Sider} = Layout;
 
 const config: ThemeConfig = {
@@ -50,12 +54,45 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
         };
     },
 );
+const menuList: MenuProps['items']= [
+    {
+        key: '1',
+        icon: <GlobalOutline/>,
+        label: 'Promise',
+        children: [
+            {
+                key: '/example/promise/1',
+                label: 'Promise'
+            }, {
+                key: '/example/promise/2',
+                label: '链式调用'
+            }, {
+                key: '/example/promise/3',
+                label: 'all'
+            }, {
+                key: '/example/promise/4',
+                label: 'any'
+            }, {
+                key: '/example/promise/5',
+                label: 'rice'
+            }, {
+                key: '/example/promise/6',
+                label: 'allSettled'
+            }]
+    }
+] as (MenuProps['items'])
 
 const Main: React.FC<{}> = () => {
+    const navigate = useNavigate();
     const {
         token: {colorBgContainer},
     } = theme.useToken();
     const [collapsed, setCollapsed] = useState(false);
+
+    const onClick: MenuProps['onClick']  =(e) => {
+        console.log(e);
+        navigate(e?.key)
+    }
     return (
 
         <ConfigProvider theme={config}>
@@ -90,7 +127,8 @@ const Main: React.FC<{}> = () => {
                             defaultSelectedKeys={['1']}
                             defaultOpenKeys={['sub1']}
                             style={{height: '100%', borderRight: 0}}
-                            items={items2}
+                            items={menuList}
+                            onClick={onClick}
                         />
                     </Sider>
                     <Layout style={{padding: '0 24px 24px'}}>
@@ -103,11 +141,20 @@ const Main: React.FC<{}> = () => {
                             style={{
                                 padding: 24,
                                 margin: 0,
-                                minHeight: 280,
+                                minHeight: 580,
                                 background: colorBgContainer,
                             }}
                         >
-                            Content
+                            <div>
+                                <Routes>
+                                    <Route
+                                        path="/example/promise/1"
+                                        element={<Suspense fallback={<div>Loading...</div>}>
+                                            <Promise1/>
+                                        </Suspense>}
+                                    />
+                                </Routes>
+                            </div>
                         </Content>
                     </Layout>
                 </Layout>
