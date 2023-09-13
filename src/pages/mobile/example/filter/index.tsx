@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, SearchBar, Popup } from 'antd-mobile';
 import './index.scss';
@@ -13,22 +14,22 @@ interface FilterProps {
   placeholder?: string;
   setShowPicker: (flag: boolean) => void;
   children?: Array<string | { label: string; value: any }>;
-  confirm: Function;
+  confirm: (item: any) => void;
   label: string;
 }
-const Filter: React.FC<FilterProps> = (
+const Filter: React.FC<FilterProps> = function (
   props = {
     filterable: false,
     remote: false,
     showPicker: true,
     defaultValue: null,
-    setShowPicker: function (flag: boolean): void {},
+    setShowPicker: (flag: boolean) => {},
     children: [],
-    confirm: function (item: object): void {},
+    confirm: (item: object) => {},
     label: '',
     placeholder: '请选择'
   }
-) => {
+) {
   const { placeholder, filterable, remote, defaultValue, showPicker = true, setShowPicker } = props;
   const [searchText, setSearchText] = useState('');
   const [value, setValue] = useState<Array<string | number | null>>([]);

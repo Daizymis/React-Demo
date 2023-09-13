@@ -86,7 +86,7 @@ const menuList: MenuProps['items'] = [
   }
 ] as MenuProps['items'];
 
-const Main: React.FC<{}> = () => {
+const Main: React.FC = () => {
   const navigate = useNavigate();
   const {
     token: { colorBgContainer }
@@ -107,19 +107,19 @@ const Main: React.FC<{}> = () => {
               viewBox="0 0 1024 1024"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
-              p-id="1729"
+              data-pid="1729"
               width="30"
               height="30"
             >
               <path
                 d="M64 448l243.2-355.84A256 256 0 0 1 504 0H512v256l256 64 192 320-52.032 78.016A256 256 0 0 1 695.04 832H576l-128 192H320L64 448z m640 64a64 64 0 1 1-128 0 64 64 0 0 1 128 0z"
                 fill="#F04925"
-                p-id="1730"
+                data-pid="1730"
               ></path>
               <path
                 d="M640 156.032V29.824A256 256 0 0 1 759.872 0H768v188.032l-128-32z"
                 fill="#F04925"
-                p-id="1731"
+                data-pid="1731"
               ></path>
             </svg>
           </div>
