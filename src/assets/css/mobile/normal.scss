@@ -19,10 +19,16 @@
   helvetica, segoe ui, arial, roboto, 'PingFang SC', 'miui',
   'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
 }
+$pink_l: #eabec4;
 .App {
   height: 100vh;
 }
 .content{
   background-color: #ffffff;
   margin-top: 2.8rem;
+}
+pre {
+  text-align: left;
+  border: 1px solid $pink_l;
+  padding: 10px;
 }
