@@ -17,15 +17,17 @@ class HPromise<T> {
     this.rejectCallbacks = [];
     fn(this.resolve.bind(this), this.reject.bind(this));
   }
-  then(resolvecb?: (value?: T) => void, rejectedcb?: (value?: T) => void) {
+  then(resolvecb?: (value?: T) => HPromise<T> | void, rejectedcb?: (value?: T) => HPromise<T> | void): HPromise<T> {
+    let res;
     if (this.state === stateStatus.Pending) {
       this.resolveCallbacks.push(resolvecb!);
       this.rejectCallbacks.push(rejectedcb!);
     } else if (this.state === stateStatus.Fulfilled) {
-      resolvecb && resolvecb(this.value);
+      res = resolvecb && resolvecb(this.value)!;
     } else if (this.state === stateStatus.Rejected) {
-      rejectedcb && rejectedcb(this.value);
+      res = rejectedcb && rejectedcb(this.value)!;
     }
+    return res && res instanceof HPromise ? res : this;
   }
   resolve(value?: T) {
     if (this.state === stateStatus.Pending) {

@@ -1,4 +1,5 @@
-import { Button, Card, Divider } from 'antd';
+import { Button, Card, Collapse, Divider } from 'antd';
+import type { CollapseProps } from 'antd';
 import { useRef, useEffect } from 'react';
 import myPromise from './Promise';
 import { useState } from 'react';
@@ -9,7 +10,7 @@ const Demo1 = () => {
   useEffect(() => {
     console.log(output);
   }, [output]);
-  const testCode = () => {
+  const testCode1 = () => {
     setOutput([]);
     const p1 = new myPromise((resolve, reject) => {
       reject('hello world');
@@ -24,25 +25,71 @@ const Demo1 = () => {
       setOutput(prevoutput => prevoutput.concat([`success ${res}`]));
     });
   };
-  const TestCodeArea = () => {
-    return (
-      <div>
-        <pre>
-          <code>{testCode.toString()}</code>
-        </pre>
-        <Divider />
-        <Button type="primary" onClick={testCode}>
-          test
-        </Button>
-        <Divider />
-      </div>
+  const testCode2 = () => {
+    const p1 = new myPromise((resolve, reject) => {
+      reject('hello world');
+    });
+    p1.then(
+      res => setOutput(prevoutput => prevoutput.concat([`success ${res}`])),
+      err => {
+        setOutput(prevoutput => prevoutput.concat([`err ${err}`]));
+        return new myPromise((resolve, reject) => {
+          //返回一个新的Promise
+          resolve('hello lian');
+        });
+      }
+    ).then(
+      res => setOutput(prevoutput => prevoutput.concat([`success ${res}`])),
+      err => setOutput(prevoutput => prevoutput.concat([`err ${err}`]))
     );
+  };
+  const TestCodeArea = () => {
+    const testList: CollapseProps['items'] = [
+      {
+        key: '1',
+        label: (
+          <span>
+            基础Promise
+            <Button type="text" onClick={testCode1}>
+              test
+            </Button>
+          </span>
+        ),
+        children: (
+          <div>
+            <pre>
+              <code>{testCode1.toString()}</code>
+            </pre>
+            <Divider />
+          </div>
+        )
+      },
+      {
+        key: '2',
+        label: (
+          <span>
+            链式调用
+            <Button type="text" onClick={testCode2}>
+              test
+            </Button>
+          </span>
+        ),
+        children: (
+          <div>
+            <pre>
+              <code>{testCode2.toString()}</code>
+            </pre>
+          </div>
+        )
+      }
+    ];
+    return <Collapse items={testList}></Collapse>;
   };
   return (
     <React.Fragment>
       <Card hoverable style={{ width: '80%' }} cover={<TestCodeArea></TestCodeArea>}>
-        {output.map(item => (
-          <div key={item}>{item}</div>
+        {output.map((item, index) => (
+          <div key={item + index}>{item}</div>
         ))}
       </Card>
       <pre>
